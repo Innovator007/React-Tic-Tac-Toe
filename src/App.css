@@ -7,7 +7,7 @@ body {
 }
 
 .square-box {
-  background: #fff;
+  background: rgb(255, 255, 255);
   border: 1px solid gray;
   float: left;
   margin-right: -1px;
@@ -20,14 +20,36 @@ body {
   border-radius: 15px;
   cursor: pointer;
   text-align: center;
-  font-size: 60px;
+  font-size: 80px;
   font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 0 3px 4px rgba(0,0,0,0.2);
   line-height: 80px;
   font-family: "Acme",sans-serif;
 }
 
+@media (max-width: 768px) {
+  .square-box {
+    height: 80px;
+    width: 80px;
+    font-size: 50px;
+    border-radius: 10px;
+    line-height: 50px;
+  }
+  .game {
+    width: 100vw;
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    transform: translate(-50%,-50%);
+  }
+  .game-board {
+    width: 100%;
+  }
+}
+
 .bg-gray {
-  background-color: rgb(64, 219, 217);
+  background-color: rgb(64, 219, 110);
   color: #fff;
   border: none;
 }
@@ -53,7 +75,7 @@ body {
 }
 .center {
   text-align: center;
-  margin: 20px auto;
+  margin: 10px auto;
 }
 
 .start-btn {
@@ -69,4 +91,84 @@ body {
 
 .start-btn:focus, .start-btn:active {
   outline: none;
+}
+
+.showlist-container{
+  position: fixed;
+  top:0;
+  left: 0;
+  background: rgba(0,0,0,0.5);
+  bottom: 0;
+  right:0;
+  z-index: 9999;
+  animation-name: fade-in;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-duration: 0.2s;
+}
+
+.showlist{
+  background: white;
+  width: 320px;
+  margin: auto;
+  top:50%;
+  position: relative;
+  transform: translate3d(0,-50%,0);
+  overflow: hidden;
+  text-align: center;
+  border-radius: 0.75rem;
+  animation-name: fade-up-subtle-middle;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-duration: 0.2s;
+  animation-delay: 0.2s;
+  opacity: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.showlist-header{
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dadada;
+  font-size: 1.2rem;
+  color: #242424;
+  font-weight: bold;
+}
+
+.showlist-items-container{
+  max-height: 70vh;
+  text-align: left;
+  padding: 1rem;
+  overflow-y: scroll;
+}
+
+.showlist-items-container::-webkit-scrollbar{
+  display: none;
+}
+
+.showlist-cancel{
+  padding: 0.75rem 1rem;
+  color:red;
+  border-top: 1px solid #dadada;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@keyframes fade-up-subtle-middle {
+    0%{
+      transform: translate3d(0, -40%, 0);
+      opacity: 0.6;
+    }
+    100%{
+      transform: translate3d(0, -50%, 0);
+      opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    0%{
+      opacity: 0;
+    }
+    100%{
+      opacity: 1;
+    }
 }

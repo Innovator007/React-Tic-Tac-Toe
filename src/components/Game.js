@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Board from './Board';
+import Modal from './Modal';
 
 class Game extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ class Game extends Component {
                 { squares: Array(9).fill(null) }
             ],
             p1wins: 0,
-            p2wins: 0
+            p2wins: 0,
+            modal: false
         }
         this.handleClick = this.handleClick.bind(this);
     }
@@ -23,11 +25,53 @@ class Game extends Component {
             const p1wins = Number(wins[0]);
             const p2wins = Number(wins[1]);
             this.setState({ p1wins, p2wins });
-		} 
+        } 
+        this.timer = setTimeout(() => {
+            const history = this.state.history.slice(0,this.state.stepNumber+1);
+            const current = history[history.length-1];
+            const squares = current.squares.slice();
+            const winner = calculateWinner(squares);
+            if(winner) {
+                return;
+            }
+            let p1wins = this.state.p1wins;
+            let p2wins = this.state.p2wins;
+            if(this.state.xIsNext) {
+                p2wins += 1;
+            } else {
+                p1wins += 1;
+            }
+            const newSquares = Array(9).fill(null);
+            localStorage.setItem("p1wins-p2wins",`${p1wins}-${p2wins}`);
+            this.setState({ p1wins, p2wins, modal: true,stepNumber: 0, xIsNext: true, history: history.concat({ squares: newSquares }) });
+        }, 15000);
     }
 
-    componentWillUpdate() {
-        
+    componentDidUpdate() {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
+            const history = this.state.history.slice(0,this.state.stepNumber+1);
+            const current = history[history.length-1];
+            const squares = current.squares.slice();
+            const winner = calculateWinner(squares);
+            if(winner) {
+                return;
+            }
+            let p1wins = this.state.p1wins;
+            let p2wins = this.state.p2wins;
+            if(this.state.xIsNext) {
+                p2wins += 1;
+            } else {
+                p1wins += 1;
+            }
+            const newSquares = Array(9).fill(null);
+            localStorage.setItem("p1wins-p2wins",`${p1wins}-${p2wins}`);
+            this.setState({ p1wins, p2wins, modal: true,stepNumber: 0, xIsNext: true, history: history.concat({ squares: newSquares }) });
+        }, 15000);
+    }
+
+    onClose = () => {
+        this.setState({ modal: false });
     }
 
     handleClick(i) {
@@ -70,6 +114,7 @@ class Game extends Component {
         }
         const stepNumber = this.state.stepNumber;
         return (
+            <React.Fragment>
             <div className="game">
                 <div className="game-board">
                     <div className="center">
@@ -83,13 +128,25 @@ class Game extends Component {
                         squares={current.squares} highlight={highlight}  
                     />
                     <div className="center">
-                    <h3>
+                        <p>
                             { winner ? `Winner is : ${winner === "X" ? "Player 1" : "Player 2" }` : `${stepNumber === 9 ? "Its a Tie!" : `Next Move : ${this.state.xIsNext ? "Player 1" : "Player 2" }` }` }
-                        </h3>
+                        </p>
+                        <p className="center">If any player does no mark for 15sec he/she will be disqualified</p>
                         <button onClick={() => this.startNewGame()} className="start-btn">Start New Game</button>
                     </div>
-                </div>
+                </div> 
             </div>
+            <Modal show={this.state.modal} onClose={() => this.onClose()} title="Disqualified">
+                <p>Due to 15s of inactivity
+                </p>
+                <p>
+                Player 1 :- {this.state.p1wins}
+                </p>
+                <p>
+                Player 2 :- {this.state.p2wins}
+                </p>
+            </Modal>
+            </React.Fragment> 
         )
     }
 }
