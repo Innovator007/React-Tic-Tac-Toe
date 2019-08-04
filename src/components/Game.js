@@ -31,7 +31,7 @@ class Game extends Component {
             const current = history[history.length-1];
             const squares = current.squares.slice();
             const winner = calculateWinner(squares);
-            if(winner) {
+            if(winner || isTie(squares)) {
                 return;
             }
             let p1wins = this.state.p1wins;
@@ -54,7 +54,7 @@ class Game extends Component {
             const current = history[history.length-1];
             const squares = current.squares.slice();
             const winner = calculateWinner(squares);
-            if(winner) {
+            if(winner || isTie(squares)) {
                 return;
             }
             let p1wins = this.state.p1wins;
@@ -169,6 +169,18 @@ function calculateWinner(squares) {
         }
     }
     return null;
+}
+
+function isTie(arr)
+{
+  for ( var i = 0, l = arr.length; i < l; i++ )
+  {
+    if ( 'undefined' == typeof arr[i] || null === arr[i] )
+    {
+      return false
+    }
+  }
+  return true;
 }
 
 export default Game;
